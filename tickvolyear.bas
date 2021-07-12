@@ -27,6 +27,11 @@ Dim curcol As String
 Dim nextcol As String
 sumcount = 2
 voltotal = 0
+Dim openingprice As Double
+Dim closingprice As Double
+Dim yearlychange As Double
+Dim percentchange As Double
+tablerow = 2
 lastrow = Cells(Rows.Count, 1).End(xlUp).Row
 
 
@@ -37,7 +42,7 @@ lastrow = Cells(Rows.Count, 1).End(xlUp).Row
         
         If curcol <> nextcol Then
         
-' find and assign ticker
+        ' find and assign ticker
         
             tickername = Cells(a, column).Value
             
@@ -45,7 +50,7 @@ lastrow = Cells(Rows.Count, 1).End(xlUp).Row
             
             tickerrow = tickerrow + 1
             
-' find and assign stock volume
+        ' find and assign stock volume
             
             Cells(sumcount, 9).Value = curcol
             
@@ -62,4 +67,39 @@ lastrow = Cells(Rows.Count, 1).End(xlUp).Row
         End If
         
     Next a
+    
+    For b = 2 To lastrow
+    
+        curcol = Cells(b, 1).Value
+        nextcol = Cells(b + 1, 1).Value
+        
+            If curcol <> nextcol Then
+            openingprice = Cells(b, 3)
+            closingprice = Cells(b, 6)
+            yearlychange = closingprice - openingprice
+            Range("J" & tablerow).Value = yearlychange
+            
+                If openingprice = 0 Then
+                    percentchange = 0
+                    
+                    Else: openingprice = Range("C" & b)
+                            percentchange = yearlychange / openingprice
+                        
+                End If
+                
+                Range("K" & tablerow).Value = percentchange
+                
+                    If Range("J" & tablerow).Value >= 0 Then
+                    Range("J" & tablerow).Interior.ColorIndex = 4
+                    
+                        Else: Range("J" & tablerow).Interior.ColorIndex = 3
+                        
+                    End If
+                    tablerow = tablerow + 1
+            End If
+            yearlychange = 0
+            percentchange = 0
+    Next b
+    
+    
 End Sub
